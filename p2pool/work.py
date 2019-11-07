@@ -314,6 +314,9 @@ class WorkerBridge(worker_interface.WorkerBridge):
                     nonce=random.randrange(2**32),
                     pubkey_hash=pubkey_hash,
                     subsidy=self.current_work.value['subsidy'],
+                    # add by caisirius for freecash
+                    devreward_value=self.current_work.value['devreward_value'],
+                    devreward_scriptpubkey=self.current_work.value['devreward_scriptpubkey'],
                     donation=math.perfect_round(65535*self.donation_percentage/100),
                     stale_info=(lambda (orphans, doas), total, (orphans_recorded_in_chain, doas_recorded_in_chain):
                         'orphan' if orphans > orphans_recorded_in_chain else
@@ -359,8 +362,9 @@ class WorkerBridge(worker_interface.WorkerBridge):
         else:
             current_time = time.time()
             if (current_time - print_throttle) > 5.0:
-                print 'New work for worker! Difficulty: %.06f Share difficulty: %.06f Total block value: %.6f %s including %i transactions' % (
+                print 'New work for worker! Difficulty: %.06f nbits: %x Share difficulty: %.06f Total block value: %.6f %s including %i transactions' % (
                     bitcoin_data.target_to_difficulty(target),
+                    bitcoin_data.FloatingInteger.from_target_upper_bound(target).bits,
                     bitcoin_data.target_to_difficulty(share_info['bits'].target),
                     self.current_work.value['subsidy']*1e-8, self.node.net.PARENT.SYMBOL,
                     len(self.current_work.value['transactions']),

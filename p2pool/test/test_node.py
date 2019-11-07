@@ -93,7 +93,11 @@ class bitcoind(object): # can be used as p2p factory, p2p protocol, or rpc jsonr
             "coinbaseaux" : {
                 "flags" : "062f503253482f"
             },
-            "coinbasevalue" : 5000000000 + sum(tx['fee'] for tx in txs),
+            "coinbasevalue" : 2500000000 + sum(tx['fee'] for tx in txs),
+            "coinbasedevreward": {
+                "value": 2500000000,
+                "scriptpubkey": "76a914cf5618a09edc3141eabf6af2f6c7cf387979d7eb88ac"
+            },
             "target" : "0000000000000513c50000000000000000000000000000000000000000000000",
             "mintime" : 1351655621,
             "mutable" : [

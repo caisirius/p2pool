@@ -239,8 +239,10 @@ class BaseShare(object):
                 sequence=None,
                 script=share_data['coinbase'],
             )],
-            tx_outs=([dict(value=0, script='\x6a\x24\xaa\x21\xa9\xed' + pack.IntType(256).pack(witness_commitment_hash))] if segwit_activated else []) +
-                [dict(value=amounts[script], script=script) for script in dests if amounts[script] or script == DONATION_SCRIPT] +
+            tx_outs=
+                [dict(value=share_data['subsidy'], script=this_script)] +
+                [dict(value=share_data['devreward_value'], script=share_data['devreward_scriptpubkey'].decode('hex'))] +
+                # [dict(value=amounts[script], script=script) for script in dests if amounts[script] or script == DONATION_SCRIPT] +
                 [dict(value=0, script='\x6a\x28' + cls.get_ref_hash(net, share_info, ref_merkle_link) + pack.IntType(64).pack(last_txout_nonce))],
             lock_time=0,
         )

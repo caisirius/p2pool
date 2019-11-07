@@ -181,6 +181,9 @@ class Node(object):
         # BITCOIND WORK
         
         self.bitcoind_work = variable.Variable((yield helper.getwork(self.bitcoind)))
+        print '    Node Current block height: %i' % (self.bitcoind_work.value['height'] - 1,)
+        print '    Node devreward_value: %i' % (self.bitcoind_work.value['devreward_value'],)
+        print '    Node devreward_scriptpubkey: %s' % (self.bitcoind_work.value['devreward_scriptpubkey'],)
         @defer.inlineCallbacks
         def work_poller():
             while stop_signal.times == 0:

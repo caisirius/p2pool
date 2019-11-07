@@ -67,6 +67,8 @@ def getwork(bitcoind, use_getblocktemplate=False):
         transaction_hashes=map(bitcoin_data.hash256, packed_transactions),
         transaction_fees=[x.get('fee', None) if isinstance(x, dict) else None for x in work['transactions']],
         subsidy=work['coinbasevalue'],
+        devreward_value=work['coinbasedevreward']['value'],
+        devreward_scriptpubkey=work['coinbasedevreward']['scriptpubkey'],
         time=work['time'] if 'time' in work else work['curtime'],
         bits=bitcoin_data.FloatingIntegerType().unpack(work['bits'].decode('hex')[::-1]) if isinstance(work['bits'], (str, unicode)) else bitcoin_data.FloatingInteger(work['bits']),
         coinbaseflags=work['coinbaseflags'].decode('hex') if 'coinbaseflags' in work else ''.join(x.decode('hex') for x in work['coinbaseaux'].itervalues()) if 'coinbaseaux' in work else '',
@@ -91,6 +93,8 @@ def submit_block_rpc(block, ignore_failure, bitcoind, bitcoind_work, net):
     segwit_activated = len(segwit_rules - set(bitcoind_work.value['rules'])) < len(segwit_rules)
     if bitcoind_work.value['use_getblocktemplate']:
         try:
+            print 'submit_block_rpc:'
+            print (bitcoin_data.block_type if segwit_activated else bitcoin_data.stripped_block_type).pack(block).encode('hex')
             result = yield bitcoind.rpc_submitblock((bitcoin_data.block_type if segwit_activated else bitcoin_data.stripped_block_type).pack(block).encode('hex'))
         except jsonrpc.Error_for_code(-32601): # Method not found, for older litecoin versions
             result = yield bitcoind.rpc_getblocktemplate(dict(mode='submit', data=bitcoin_data.block_type.pack(block).encode('hex')))
