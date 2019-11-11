@@ -85,6 +85,7 @@ class BaseShare(object):
     ref_type = None
 
     gentx_before_refhash = pack.VarStrType().pack(DONATION_SCRIPT) + pack.IntType(64).pack(0) + pack.VarStrType().pack('\x6a\x28' + pack.IntType(256).pack(0) + pack.IntType(64).pack(0))[:3]
+    gentx_before_refhash_fc = pack.IntType(64).pack(0) + pack.VarStrType().pack('\x6a\x28' + pack.IntType(256).pack(0) + pack.IntType(64).pack(0))[:3];
 
     @classmethod
     def get_dynamic_types(cls, net):
@@ -258,7 +259,7 @@ class BaseShare(object):
                 share_info=share_info,
                 ref_merkle_link=dict(branch=[], index=0),
                 last_txout_nonce=last_txout_nonce,
-                hash_link=prefix_to_hash_link(bitcoin_data.tx_id_type.pack(gentx)[:-32-8-4]),
+                hash_link=prefix_to_hash_link(bitcoin_data.tx_id_type.pack(gentx)[:-32-8-4],cls.gentx_before_refhash_fc),
                 merkle_link=bitcoin_data.calculate_merkle_link([None] + other_transaction_hashes, 0),
             ))
             assert share.header == header # checks merkle_root
