@@ -1,5 +1,28 @@
-Requirements:
--------------------------
+# Running P2Pool for Freecash in docker
+first, get the image ready:
+```shell
+git clone https://github.com/caisirius/p2pool
+
+cd p2pool
+
+docker build -t freecash/p2pool:0.1.snapshot .
+```
+modify 'fc.conf': type the correct rpcuser and rpcpassword=xxx
+
+modify 'run_docker.sh': modify the payout_address and fc_node_ip
+
+start p2pool for mainnet:
+```shell
+./run_docker.sh mainnet
+```
+
+start p2pool for testnet:
+```shell
+./run_docker.sh testnet
+```
+
+# Requirements:
+
 Generic:
 * Bitcoin >=0.11.1
 * Python >=2.6
