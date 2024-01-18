@@ -197,11 +197,11 @@ class WorkerBridge(worker_interface.WorkerBridge):
         if random.uniform(0, 100) < self.worker_fee:
             pubkey_hash = self.my_pubkey_hash
         else:
-            try:
-                pubkey_hash = bitcoin_data.address_to_pubkey_hash(user, self.node.net.PARENT)
-            except: # XXX blah
-                if self.args.address != 'dynamic':
-                    pubkey_hash = self.my_pubkey_hash
+            #try:
+            #    pubkey_hash = bitcoin_data.address_to_pubkey_hash(user, self.node.net.PARENT)
+            #except: # XXX blah
+            if self.args.address != 'dynamic':
+                pubkey_hash = self.my_pubkey_hash
         
         return user, pubkey_hash, desired_share_target, desired_pseudoshare_target
     
