@@ -192,6 +192,7 @@ class Node(object):
                     self.bitcoind_work.set((yield helper.getwork(self.bitcoind, self.bitcoind_work.value['use_getblocktemplate'])))
                 except:
                     log.err()
+                print '    Node Current block height: %i, Node bits: %x' % (self.bitcoind_work.value['height'] - 1, self.bitcoind_work.value['bits'].bits)
                 yield defer.DeferredList([flag, deferral.sleep(15)], fireOnOneCallback=True)
         work_poller()
         

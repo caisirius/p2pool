@@ -55,7 +55,7 @@ class StratumRPCMiningProvider(object):
         ).addErrback(lambda err: None)
         self.handler_map[jobid] = x, got_response
     
-    def rpc_submit(self, worker_name, job_id, extranonce2, ntime, nonce):
+    def rpc_submit(self, worker_name, job_id, extranonce2, ntime, nonce, rolled_version=None):
         if job_id not in self.handler_map:
             print >>sys.stderr, '''Couldn't link returned work's job id with its handler. This should only happen if this process was recently restarted!'''
             return False
@@ -63,8 +63,12 @@ class StratumRPCMiningProvider(object):
         coinb_nonce = extranonce2.decode('hex')
         assert len(coinb_nonce) == self.wb.COINBASE_NONCE_LENGTH
         new_packed_gentx = x['coinb1'] + coinb_nonce + x['coinb2']
+        r_version = x['version']
+        # see https://github.com/bitcoin/bips/blob/master/bip-0320.mediawiki and https://zh.braiins.com/stratum-v2
+        if rolled_version is not None :
+            r_version = x['version'] ^ int(rolled_version, 16)
         header = dict(
-            version=x['version'],
+            version=r_version,
             previous_block=x['previous_block'],
             merkle_root=bitcoin_data.check_merkle_link(bitcoin_data.hash256(new_packed_gentx), x['merkle_link']), # new_packed_gentx has witness data stripped
             timestamp=pack.IntType(32).unpack(getwork._swap4(ntime.decode('hex'))),
