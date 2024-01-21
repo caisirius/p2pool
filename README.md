@@ -7,7 +7,9 @@ cd p2pool
 
 docker build -t freecash/p2pool:0.1.snapshot .
 ```
-modify 'fc.conf': type the correct rpcuser and rpcpassword=xxx
+cp fc.conf.sample fc.conf
+
+then modify 'fc.conf': type the correct rpcuser and rpcpassword=xxx
 
 modify 'run_docker.sh': modify the payout_address and fc_node_ip
 
