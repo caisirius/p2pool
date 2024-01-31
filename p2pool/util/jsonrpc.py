@@ -9,6 +9,7 @@ from twisted.python import failure, log
 from twisted.web import client, error
 
 from p2pool.util import deferral, deferred_resource, memoize
+import p2pool
 
 class Error(Exception):
     def __init__(self, code, message, data=None):
@@ -57,6 +58,8 @@ def _handle(data, provider, preargs=(), response_handler=None):
             try:
                 try:
                     req = json.loads(data)
+                    if p2pool.DEBUG:
+                        print ' ** receive data : %s' % data
                 except Exception:
                     raise Error_for_code(-32700)(u'Parse error')
                 
@@ -149,16 +152,20 @@ class HTTPServer(deferred_resource.DeferredResource):
 
 class LineBasedPeer(basic.LineOnlyReceiver):
     delimiter = '\n'
-    
+
+    def sendLine2(self, line, info):
+        if p2pool.DEBUG:
+            print ' ** send(%s) : %s' % (info ,line)
+        self.sendLine(line)
     def __init__(self):
         #basic.LineOnlyReceiver.__init__(self)
-        self._matcher = deferral.GenericDeferrer(max_id=2**30, func=lambda id, method, params: self.sendLine(json.dumps({
+        self._matcher = deferral.GenericDeferrer(max_id=2**30, func=lambda id, method, params: self.sendLine2(json.dumps({
             'jsonrpc': '2.0',
             'method': method,
             'params': params,
             'id': id,
-        })))
+        }), "default"))
         self.other = Proxy(self._matcher)
     
     def lineReceived(self, line):
-        _handle(line, self, response_handler=self._matcher.got_response).addCallback(lambda line2: self.sendLine(line2) if line2 is not None else None)
+        _handle(line, self, response_handler=self._matcher.got_response).addCallback(lambda line2: self.sendLine2(line2, "lineReceived") if line2 is not None else None)

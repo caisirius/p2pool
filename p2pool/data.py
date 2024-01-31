@@ -30,11 +30,6 @@ hash_link_type = pack.ComposedType([
 def prefix_to_hash_link(prefix, const_ending=''):
     assert prefix.endswith(const_ending), (prefix, const_ending)
     x = sha256.sha256(prefix)
-    print type(prefix)
-    print len(prefix)
-    print prefix.encode('hex')
-    print 'extra_data %d - %d' %(len(x.buf), len(const_ending))
-    print x.buf[:max(0, len(x.buf)-len(const_ending))]
     # old 44-79 now bad 2-0
     return dict(state=x.state, extra_data=x.buf[:max(0, len(x.buf)-len(const_ending))], length=x.length//8)
 
@@ -271,15 +266,9 @@ class BaseShare(object):
             assert share.header == header # checks merkle_root
             return share
 
-        print 'bitcoin_data.tx_id_type.pack(gentx)[:-32-8-4]  '
-        print bitcoin_data.tx_id_type.pack(gentx).encode('hex')
-        print bitcoin_data.tx_id_type.pack(gentx)[:-32 - 8 - 4].encode('hex')
-        print 'cls.gentx_before_refhash'
-        print cls.gentx_before_refhash.encode('hex')
-        print 'cls.gentx_before_refhash_fc'
-        print cls.gentx_before_refhash_fc.encode('hex')
-        print 'gentx: '
-        print gentx
+        if p2pool.DEBUG:
+            print 'bitcoin_data.tx_id_type.pack(gentx)'
+            print bitcoin_data.tx_id_type.pack(gentx).encode('hex')
         return share_info, gentx, other_transaction_hashes, get_share
     
     @classmethod
