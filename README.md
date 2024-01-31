@@ -23,6 +23,11 @@ start p2pool for testnet:
 ./run_docker.sh testnet
 ```
 
+if you want to stop p2pool:
+```shell
+./stop_docker.sh
+```
+
 # Requirements:
 
 Generic:
