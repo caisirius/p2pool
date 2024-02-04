@@ -58,8 +58,7 @@ def _handle(data, provider, preargs=(), response_handler=None):
             try:
                 try:
                     req = json.loads(data)
-                    if p2pool.DEBUG:
-                        print ' ** receive data : %s' % data
+                    print ' ** receive data : %s' % data
                 except Exception:
                     raise Error_for_code(-32700)(u'Parse error')
                 
@@ -154,8 +153,7 @@ class LineBasedPeer(basic.LineOnlyReceiver):
     delimiter = '\n'
 
     def sendLine2(self, line, info):
-        if p2pool.DEBUG:
-            print ' ** send(%s) : %s' % (info ,line)
+        print ' ** send(%s) : %s' % (info ,line)
         self.sendLine(line)
     def __init__(self):
         #basic.LineOnlyReceiver.__init__(self)

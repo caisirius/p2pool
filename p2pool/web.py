@@ -290,9 +290,8 @@ def get_web_root(wb, datadir_path, bitcoind_getinfo_var, stop_event=variable.Eve
             return None
         share = node.tracker.items[int(share_hash_str, 16)]
 
-        if p2pool.DEBUG:
-            print 'share is :'
-            print share
+        print 'share is :'
+        print share
         return dict(
             parent='%064x' % (share.previous_hash if share.previous_hash is not None else share.min_header.previous_block),
             far_parent='%064x' % (0 if share.share_info['far_share_hash'] is None else share.share_info['far_share_hash']),
