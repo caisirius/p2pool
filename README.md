@@ -13,6 +13,8 @@ then modify 'fc.conf': type the correct rpcuser and rpcpassword=xxx
 
 modify 'run_docker.sh': modify the payout_address and fc_node_ip
 
+note: fc_node_ip can not be 127.0.0.1 or localhost
+
 start p2pool for mainnet:
 ```shell
 ./run_docker.sh mainnet
@@ -26,6 +28,15 @@ start p2pool for testnet:
 if you want to stop p2pool:
 ```shell
 ./stop_docker.sh
+```
+
+view the log:
+```shell
+docker logs -n 50 -f freecash_p2pool
+```
+export log to a local file:
+```shell
+docker logs freecash_p2pool > fc_p2pool.log
 ```
 
 # Requirements:

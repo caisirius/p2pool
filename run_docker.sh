@@ -36,4 +36,4 @@ else
     exit -1
 fi
 echo "   freecash_p2pool started. please check the docker status using 'docker ps'"
-echo "   check logs using 'docker logs -n 50 freecash_p2pool'"
+echo "   check logs using 'docker logs -n 50 -f freecash_p2pool'"
