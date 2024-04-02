@@ -245,7 +245,7 @@ class BaseShare(object):
                 [dict(value=share_data['subsidy'], script=this_script)] +
                 [dict(value=share_data['devreward_value'], script=share_data['devreward_scriptpubkey'].decode('hex'))] +
                 # [dict(value=amounts[script], script=script) for script in dests if amounts[script] or script == DONATION_SCRIPT] +
-                [dict(value=0, script='\x6a\x28' + cls.get_ref_hash(net, share_info, ref_merkle_link) + pack.IntType(64).pack(last_txout_nonce))],
+                [dict(value=0, script='\x6a\x08' + pack.IntType(64).pack(last_txout_nonce))],
             lock_time=0,
         )
         if segwit_activated:
