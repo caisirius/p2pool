@@ -85,8 +85,8 @@ class BaseShare(object):
     share_type = None
     ref_type = None
 
-    gentx_before_refhash = pack.VarStrType().pack(DONATION_SCRIPT) + pack.IntType(64).pack(0) + pack.VarStrType().pack('\x6a\x28' + pack.IntType(256).pack(0) + pack.IntType(64).pack(0))[:3]
-    gentx_before_refhash_fc = pack.IntType(64).pack(0) + pack.VarStrType().pack('\x6a\x28' + pack.IntType(256).pack(0) + pack.IntType(64).pack(0))[:3];
+    gentx_before_refhash = pack.VarStrType().pack(DONATION_SCRIPT) + pack.IntType(64).pack(0) + pack.VarStrType().pack('\x6a\x08' + pack.IntType(64).pack(0))[:3]
+    gentx_before_refhash_fc = pack.IntType(64).pack(0) + pack.VarStrType().pack('\x6a\x08' + pack.IntType(64).pack(0))[:3];
 
     @classmethod
     def get_dynamic_types(cls, net):
@@ -260,7 +260,7 @@ class BaseShare(object):
                 share_info=share_info,
                 ref_merkle_link=dict(branch=[], index=0),
                 last_txout_nonce=last_txout_nonce,
-                hash_link=prefix_to_hash_link(bitcoin_data.tx_id_type.pack(gentx)[:-32-8-4],cls.gentx_before_refhash_fc),
+                hash_link=prefix_to_hash_link(bitcoin_data.tx_id_type.pack(gentx)[:-8-4],cls.gentx_before_refhash_fc),
                 merkle_link=bitcoin_data.calculate_merkle_link([None] + other_transaction_hashes, 0),
             ))
             assert share.header == header # checks merkle_root
@@ -324,7 +324,7 @@ class BaseShare(object):
         
         self.gentx_hash = check_hash_link(
             self.hash_link,
-            self.get_ref_hash(net, self.share_info, contents['ref_merkle_link']) + pack.IntType(64).pack(self.contents['last_txout_nonce']) + pack.IntType(32).pack(0),
+            pack.IntType(64).pack(self.contents['last_txout_nonce']) + pack.IntType(32).pack(0),
             self.gentx_before_refhash,
         )
         merkle_root = bitcoin_data.check_merkle_link(self.gentx_hash, self.share_info['segwit_data']['txid_merkle_link'] if segwit_activated else self.merkle_link)
